@@ -1,0 +1,69 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+    }
+}
+
+apply plugin: 'com.android.application'
+
+repositories {
+    jcenter()
+    google()
+}
+
+dependencies {
+    androidTestCompile project(':EventBus')
+    androidTestCompile project(':EventBusTestJava')
+    androidTestAnnotationProcessor project(':EventBusAnnotationProcessor')
+    compile fileTree(dir: 'libs', include: '*.jar')
+    androidTestCompile 'com.android.support.test:runner:1.0.1'
+    androidTestCompile 'com.android.support.test:rules:1.0.1'
+}
+
+android {
+    buildToolsVersion '25.0.3' // When updating, don't forget to adjust .travis.yml
+    compileSdkVersion 25
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_7
+        targetCompatibility = JavaVersion.VERSION_1_7
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+        }
+
+        androidTest {
+            java.srcDirs = ['src']
+        }
+    }
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+
+        testApplicationId "de.greenrobot.event.test"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [ eventBusIndex : 'org.greenrobot.eventbus.EventBusTestsIndex' ]
+            }
+        }
+    }
+
+    lintOptions {
+        // To see problems right away, also nice for Travis CI
+        textOutput 'stdout'
+
+        // TODO FIXME: Travis only error
+        abortOnError false
+    }
+}

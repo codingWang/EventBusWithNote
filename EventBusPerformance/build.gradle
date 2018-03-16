@@ -1,0 +1,42 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+    }
+}
+
+apply plugin: 'com.android.application'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile project(':EventBus')
+    annotationProcessor project(':EventBusAnnotationProcessor')
+    compile 'com.squareup:otto:1.3.8'
+}
+
+android {
+    buildToolsVersion '25.0.3' // When updating, don't forget to adjust .travis.yml
+    compileSdkVersion 25
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+        }
+    }
+
+    defaultConfig {
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [eventBusIndex: 'org.greenrobot.eventbusperf.MyEventBusIndex']
+            }
+        }
+    }
+}
